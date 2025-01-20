@@ -57,6 +57,7 @@ Material:
     - _DecalMeshDepthBias: 0
     - _DecalMeshViewBias: 0
     - _DrawOrder: 0
+    - _MaxDist: 10
     - _Normal_Threshold: 0.5
     - _OVERLAY: 1
     - _QueueControl: 0
@@ -65,5 +66,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Outline_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
