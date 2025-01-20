@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WaveBehaviour : MonoBehaviour
 {
-    public int audioPower;
+    [HideInInspector] public int audioPower;
 
     private float circleScaleValue = 0;
 
@@ -12,9 +12,10 @@ public class WaveBehaviour : MonoBehaviour
         if (audioPower == null)
             return;
         
-        if (circleScaleValue < audioPower)
+        if (circleScaleValue < audioPower/2)
         {
-            circleScaleValue += Time.deltaTime * audioPower;
+            circleScaleValue += Time.deltaTime * 2;
+            transform.localScale = new Vector3(circleScaleValue, circleScaleValue, circleScaleValue);
         }
         
         else Destroy(gameObject);
