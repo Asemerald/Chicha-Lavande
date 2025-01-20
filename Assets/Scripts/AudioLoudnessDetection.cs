@@ -20,6 +20,7 @@ public class AudioLoudnessDetection : MonoBehaviour
 
     private void Start()
     {
+        canWave = true;
         MicrophoneToAudioClip();
     }
 
@@ -34,7 +35,7 @@ public class AudioLoudnessDetection : MonoBehaviour
         if (loudness < threshold)
             loudness = 0;
 
-        if (loudness > 20 && canWave)
+        if (loudness > 1 && canWave)
         {
             canWave = false;
             waveInstantier.InstantiateWave(Mathf.RoundToInt(loudness), transform.position);
@@ -46,7 +47,7 @@ public class AudioLoudnessDetection : MonoBehaviour
 
     private IEnumerator WaveCD()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         canWave = true;
     }
     
