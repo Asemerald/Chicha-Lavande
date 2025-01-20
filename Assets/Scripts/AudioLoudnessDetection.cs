@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +13,10 @@ public class AudioLoudnessDetection : MonoBehaviour
 
     public float loudnessSensibility = 100;
     public float threshold = 0.1f;
+
+    //WAVE
+    [SerializeField] private WaveInstantier waveInstantier;
+    private bool canWave;
 
     private void Start()
     {
@@ -28,10 +33,23 @@ public class AudioLoudnessDetection : MonoBehaviour
 
         if (loudness < threshold)
             loudness = 0;
+
+        if (loudness > 20 && canWave)
+        {
+            canWave = false;
+            waveInstantier.InstantiateWave(Mathf.RoundToInt(loudness), transform.position);
+            StartCoroutine(WaveCD());
+        }
         
         uiText.text = loudness.ToString();
     }
 
+    private IEnumerator WaveCD()
+    {
+        yield return new WaitForSeconds(1f);
+        canWave = true;
+    }
+    
     public void MicrophoneToAudioClip()
     {
         //get the first microphone in device list
