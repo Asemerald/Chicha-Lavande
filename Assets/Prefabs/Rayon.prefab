@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7332382510605452481}
   - component: {fileID: 7344053567634183444}
   - component: {fileID: -6666941541208797076}
-  - component: {fileID: 6596150555682564019}
+  - component: {fileID: 405850045203036178}
   m_Layer: 0
   m_Name: Rayon
   m_TagString: Untagged
@@ -52,7 +52,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3082972441196255078}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0aafc68050b6900478f3387bf959fe08, type: 2}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +109,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-6666941541208797076
 MonoBehaviour:
@@ -124,8 +124,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioPower: 0
+  parentGO: {fileID: 0}
+  waveDistMultiplier: 1
+  waveSpeedMultiplier: 1
   ps: {fileID: 4396468957272323695}
---- !u!54 &6596150555682564019
+--- !u!54 &405850045203036178
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
