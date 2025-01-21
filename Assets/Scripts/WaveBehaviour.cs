@@ -4,40 +4,50 @@ using UnityEngine;
 public class WaveBehaviour : MonoBehaviour
 {
     [HideInInspector] public int audioPower;
+    [HideInInspector] public GameObject parentGO;
+    [SerializeField] private float waveDistMultiplier = 1.5f;
+    [SerializeField] private float waveSpeedMultiplier = 2f;
 
-    private float circleScaleValue = 0;
+    private float currentScale;
 
     [SerializeField] private ParticleSystem ps;
+    [SerializeField] private GameObject previewShape;
 
     private void Start()
     {
         var main = ps.main;
-        main.startSize = audioPower * 0.1f;
-        main.startLifetime = audioPower * 0.05f;
-        
-        //ps.sizeOverLifetime.size.curve[]
+        main.startSize = audioPower * (0.1f * waveDistMultiplier);
+        main.startLifetime = audioPower * ((0.05f * waveDistMultiplier) / waveSpeedMultiplier);
+
+        currentScale = 0;
     }
 
     private void Update()
-    {
-        
+    { 
         if (audioPower == null)
             return;
         
-        if (circleScaleValue < audioPower/2)
+        //scale collider with fx
+        currentScale += Time.deltaTime * (2 * waveSpeedMultiplier);
+
+        if (currentScale / 2 > audioPower * (0.05f * (waveDistMultiplier)) + 0.5f)
         {
-            circleScaleValue += Time.deltaTime * audioPower * 0.2f;
-            transform.localScale = new Vector3(circleScaleValue, circleScaleValue, circleScaleValue);
+            Destroy(gameObject);
         }
-        
-        else Destroy(gameObject);
+
+        transform.localScale = new Vector3(currentScale, currentScale, currentScale);
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject)
+        if (other.gameObject.CompareTag("Player") && other.gameObject != parentGO)
         {
             Debug.Log($"Player ({other.gameObject.name}) find at {other.transform.position}");
+            Mesh otherMesh = other.GetComponent<MeshFilter>().mesh;
+            
+            GameObject instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
+            Destroy(instanceShape, 3f);
         }
     }
 }
