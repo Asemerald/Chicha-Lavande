@@ -1,96 +1,238 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
+using TMPro;
 using UnityEngine;
-using Unity.Netcode;
+using UnityEngine.InputSystem;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float jumpForce = 5f;
-    public float gravity = -9.8f;
+    private Vector2 moveVector;
+    private Vector3 moveDir, slopeMoveDir;
 
-    [Header("References")]
-    public CharacterController characterController;
-
-    private Vector3 velocity;
     private bool isGrounded;
+    
+    private Rigidbody rb;
 
-    // Client-side prediction variables
-    private Vector3 lastProcessedPosition;
-    private Quaternion lastProcessedRotation;
+    [Header("Movement Settings")]
+    public float speed = 10f;
 
-    public override void OnNetworkSpawn()
+    [Header("Jump Settings")]
+    [SerializeField] private Transform feet;
+    [SerializeField] private float jumpForce = 10;
+    [SerializeField] private float airMultiplier = 0.4f;
+    [SerializeField] private float groundDrag, airDrag;
+    [SerializeField] private float maxAddedGravity, speedAddedGravity;
+    private float currentAddedGravity;
+    private RaycastHit slopeHit;
+    [SerializeField] private float coyoteTime = 0.2f;
+    private float currentFallTime;
+
+    [Header("Camera effects")]
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private float defaultFOV = 100;
+    [SerializeField] private float dynamicFOVThreshold = 12;
+    [SerializeField] private float dynamicFOVMultiplier = 3;
+    [Space(10)]
+    [SerializeField] private float shakeTime = 0.3f;
+    [SerializeField] private float shakeAmplitude;
+    private float currentShakeTime;
+    private float shakeMultiplier;
+    private float targetFOV;
+
+    [Header("Audio")] 
+    [SerializeField] private AudioSource audioSource;
+    private bool isLanding;
+    
+    [Space(10)]
+    [SerializeField] private TextMeshProUGUI debugText;
+    
+    private void Start()
     {
-        if (!IsOwner)
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        
+        rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        //ground check
+        isGrounded = Physics.Raycast(feet.position, Vector3.down, 0.2f);
+        
+        slopeMoveDir = Vector3.ProjectOnPlane(moveDir, slopeHit.normal);
+
+        Vector3 forward = Camera.main.transform.forward;
+        forward.y = 0;
+        
+        Vector3 right = Camera.main.transform.right;
+        forward.y = 0;
+        
+        moveDir = forward.normalized * moveVector.y + right * moveVector.x;
+        
+        ControlDrag();
+
+        CameraDynamicFOV();
+
+        
+
+        if (isGrounded &&  Mathf.Abs(rb.linearVelocity.y) > 16)
         {
-            // Disable input processing for non-owners but keep the script for synchronization.
-            enabled = false;
+            StartCoroutine(Land());
+        }
+
+        if (isGrounded && rb.linearVelocity.y < 0)
+        {
+            currentFallTime = 0;
+        }
+
+        if (currentShakeTime > 0)
+        {
+            CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin =
+                virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            
+            currentShakeTime -= Time.deltaTime;
+            cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = (shakeAmplitude / shakeTime) * currentShakeTime;
+            
+            if (currentShakeTime <= 0f)
+            {
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0f;
+            }
+        }
+        
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+        
+        if (!isGrounded)
+        {
+            currentAddedGravity = Mathf.SmoothStep(currentAddedGravity, maxAddedGravity, speedAddedGravity * Time.deltaTime);
+
+            if (currentFallTime < coyoteTime + 0.1f)
+            {
+                currentFallTime += Time.deltaTime;
+            }
+        }
+        else if (currentAddedGravity != 0)
+        {
+            currentAddedGravity = 0;
+        }
+        
+        
+    }
+
+    void Move()
+    {
+        //Extra gravity
+        rb.AddForce(Vector3.down * currentAddedGravity);
+        
+        if (isGrounded && !OnSlope())
+        {
+            rb.AddForce(moveDir.normalized * speed, ForceMode.Acceleration);
+        }
+        else if (isGrounded && OnSlope())
+        {
+            rb.AddForce(slopeMoveDir.normalized * speed, ForceMode.Acceleration);
+        }
+        else if (!isGrounded)
+        {
+            rb.AddForce(moveDir.normalized * speed * airMultiplier, ForceMode.Acceleration);
+        }
+        
+    }
+
+    void ControlDrag()
+    {
+        if (OnSlope() && moveDir.magnitude <= 0.1f)
+        {
+            rb.linearDamping = 30;
+        }
+        else if (isGrounded)
+        {
+            rb.linearDamping = groundDrag;
+        }
+        else
+        {
+            rb.linearDamping = airDrag;
+        }
+    }
+    
+    void CameraDynamicFOV()
+    {
+        if (rb.linearVelocity.magnitude < dynamicFOVThreshold)
+        {
+            targetFOV = defaultFOV;
+        }
+        else
+        {
+            targetFOV = defaultFOV + ((rb.linearVelocity.magnitude - dynamicFOVThreshold) * dynamicFOVMultiplier);
+        }
+
+        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, targetFOV, 0.9f * Time.deltaTime);
+    }
+
+    public void CameraShake()
+    {
+        CinemachineBasicMultiChannelPerlin cinemachineNoise =
+            virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        //cinemachineNoise.m_AmplitudeGain = shakeAmplitude;
+        currentShakeTime = shakeTime;
+    }
+
+    void Jump()
+    {
+        if (currentFallTime < coyoteTime)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            
+            //AudioContainer.Instance.PlaySound(audioSource, AudioContainer.Instance.jump);
+
+            currentFallTime = coyoteTime + 1;
         }
     }
 
-    void Update()
+    private IEnumerator Land()
     {
-        if (!IsOwner || !IsClient)
+        if (!isLanding)
         {
-            return;
-        }
-
-        HandleMovement();
-    }
-
-    private void HandleMovement()
-    {
-        // Check if the player is on the ground
-        isGrounded = characterController.isGrounded;
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
-        // Get input
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
-
-        // Calculate movement direction
-        Vector3 move = transform.right * moveX + transform.forward * moveZ;
-        characterController.Move(move * moveSpeed * Time.deltaTime);
-
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-        }
-
-        // Apply gravity
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
-
-        // Send predicted position and rotation to the server
-        UpdateServerWithPredictionServerRpc(transform.position, transform.rotation);
-    }
-
-    [ServerRpc]
-    private void UpdateServerWithPredictionServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams rpcParams = default)
-    {
-        // Validate and apply predicted position and rotation for the client
-        if (IsServer)
-        {
-            lastProcessedPosition = position;
-            lastProcessedRotation = rotation;
-
-            UpdateClientsWithPositionClientRpc(position, rotation);
+            isLanding = true;
+            //AudioContainer.Instance.PlaySound(audioSource, AudioContainer.Instance.land);
+            yield return new WaitForSeconds(0.3f);
+            isLanding = false;
         }
     }
 
-    [ClientRpc]
-    private void UpdateClientsWithPositionClientRpc(Vector3 position, Quaternion rotation, ClientRpcParams rpcParams = default)
+    private bool OnSlope()
     {
-        if (!IsOwner)
+        if (Physics.Raycast(feet.position, Vector3.down, out slopeHit, 0.2f))
         {
-            // Smoothly interpolate to the updated position
-            transform.position = Vector3.Lerp(transform.position, position, 0.1f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 0.1f);
+            if (slopeHit.normal != Vector3.up)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveVector = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.action.WasPressedThisFrame())
+        {
+            Jump();
         }
     }
 }
