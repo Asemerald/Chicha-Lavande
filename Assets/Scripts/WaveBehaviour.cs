@@ -11,6 +11,7 @@ public class WaveBehaviour : MonoBehaviour
     private float currentScale;
 
     [SerializeField] private ParticleSystem ps;
+    [SerializeField] private GameObject previewShape;
 
     private void Start()
     {
@@ -43,6 +44,10 @@ public class WaveBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && other.gameObject != parentGO)
         {
             Debug.Log($"Player ({other.gameObject.name}) find at {other.transform.position}");
+            Mesh otherMesh = other.GetComponent<MeshFilter>().mesh;
+            
+            GameObject instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
+            Destroy(instanceShape, 3f);
         }
     }
 }

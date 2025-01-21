@@ -7,15 +7,6 @@ public class AudioLoudnessDetection : MonoBehaviour
 {
     public int sampleWindow = 64;
     private AudioClip microphoneClip;
-
-    public AudioSource source;
-    
-    private float maxVolume = 0;
-
-    private void Update()
-    {
-        
-    }
     
     public void MicrophoneToAudioClip()
     {

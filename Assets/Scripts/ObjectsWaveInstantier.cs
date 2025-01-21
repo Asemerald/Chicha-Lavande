@@ -56,11 +56,10 @@ public class ObjectsWaveInstantier : MonoBehaviour
 
         if (loudness < threshold)
             loudness = 0;
-        
 
         if (canWave)
         {
-            if ((loudness < currentLoudness - 40 || loudness < 2) && loudness > 0)
+            if (((loudness < currentLoudness - 40 || loudness < threshold + 2) && loudness > 0) || loudness == 100)
             {
                 Debug.Log("Instanciate");
                 //canWave = false;

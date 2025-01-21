@@ -24,8 +24,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: f8fe19f3b6c468848b6674f793c51ba8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _OVERLAY
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -57,9 +56,9 @@ Material:
     - _DecalMeshDepthBias: 0
     - _DecalMeshViewBias: 0
     - _DrawOrder: 0
-    - _MaxDist: 19.62
+    - _MaxDist: 7.42
     - _Normal_Threshold: 0.5
-    - _OVERLAY: 1
+    - _OVERLAY: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Size: 0.01
