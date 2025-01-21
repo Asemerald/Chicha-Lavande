@@ -57,7 +57,7 @@ Material:
     - _DecalMeshDepthBias: 0
     - _DecalMeshViewBias: 0
     - _DrawOrder: 0
-    - _MaxDist: 11.62
+    - _MaxDist: 19.62
     - _Normal_Threshold: 0.5
     - _OVERLAY: 1
     - _QueueControl: 0
