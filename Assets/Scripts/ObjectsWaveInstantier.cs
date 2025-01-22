@@ -1,9 +1,11 @@
 using System.Collections;
+using Player;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioLoudnessDetection))]
-public class ObjectsWaveInstantier : MonoBehaviour
+public class ObjectsWaveInstantier : NetworkBehaviour
 {
     [SerializeField] private bool continius;
     [SerializeField] private bool isSync;
@@ -70,8 +72,8 @@ public class ObjectsWaveInstantier : MonoBehaviour
 
         if (canWave && loudness > 0)
         {
-            WaveInstantier.instance.InstantiateWave(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100),
-                transform.position, parentWave == null ?  transform.gameObject : parentWave);
+            WaveInstantier.instance.InstantiateWaveServerRpc(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100),
+                transform.position, var component = transform.parent.TryGetComponent<PlayerController>() != null ? NetworkManager.Singleton.LocalClientId : 99);
 
             if (isSync)
             {

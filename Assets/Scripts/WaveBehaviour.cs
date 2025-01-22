@@ -1,10 +1,11 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WaveBehaviour : MonoBehaviour
+public class WaveBehaviour : NetworkBehaviour
 {
     [HideInInspector] public int audioPower;
-    [HideInInspector] public GameObject parentGO;
+    [HideInInspector] public ulong parentId;
     [SerializeField] private float waveDistMultiplier = 1.5f;
     [SerializeField] private float waveSpeedMultiplier = 2f;
 
@@ -41,10 +42,10 @@ public class WaveBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject != parentGO)
+        if (other.gameObject.CompareTag("Player") && NetworkManager.Singleton.LocalClientId != parentId)
         {
+            Debug.Log("Local player id is " + NetworkManager.Singleton.LocalClientId + " and parent id is " + parentId);
             Debug.Log($"Player ({other.gameObject.name}) find at {other.transform.position}");
-            Mesh otherMesh = other.GetComponent<MeshFilter>().mesh;
             
             GameObject instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
             Destroy(instanceShape, 3f);
