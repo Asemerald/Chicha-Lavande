@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -62,6 +64,10 @@ namespace Network
         {
             try
             {
+                this.channelName = channelName;
+                //Leave any existing channel
+                await VivoxService.Instance.LeaveAllChannelsAsync();
+                
                 await VivoxService.Instance.JoinPositionalChannelAsync(channelName, ChatCapability.AudioOnly, new Channel3DProperties(
                     audibleDistance: 11,
                     conversationalDistance: 1,
@@ -69,21 +75,28 @@ namespace Network
                     audioFadeIntensityByDistanceaudio: 3
                     ));
                 
-                
                 Debug.Log($"Joined channel: {channelName}");
-                this.channelName = channelName;
+                
                 _hasJoinedChannel = true;
             }
             catch (Exception e)
             {
                 Debug.LogError($"Failed to join channel {channelName}: {e}");
+                StartCoroutine(RetryConnection());
+                Debug.LogWarning("Retrying connection in 1 second...");
             }
+        }
+        
+        private IEnumerator RetryConnection()
+        {
+            yield return new WaitForSeconds(1);
+            JoinChannelAsync(channelName);
         }
         
         public void UpdateListenerPosition(GameObject playerGameObject)
         {
             if (playerGameObject == null) return;
-            VivoxService.Instance.Set3DPosition(playerGameObject, channelName);
+            VivoxService.Instance.Set3DPosition(Camera.main.gameObject, channelName);
             Debug.Log("Updated listener position to " + playerGameObject.transform.position);
         }
 

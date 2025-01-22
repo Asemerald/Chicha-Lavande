@@ -8,6 +8,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Vivox;
 using UnityEngine;
 
 public class LobbyManager : MonoBehaviour {
@@ -83,6 +84,7 @@ public class LobbyManager : MonoBehaviour {
         initializationOptions.SetProfile(playerName);
 
         await UnityServices.InitializeAsync(initializationOptions);
+        
 
         AuthenticationService.Instance.SignedIn += () => {
             // do nothing
@@ -100,6 +102,9 @@ public class LobbyManager : MonoBehaviour {
         }
 #endif
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        
+        await VivoxService.Instance.InitializeAsync();
+        VivoxManager.Instance.LoginToVivoxAsync();
     }
 
     private void HandleRefreshLobbyList() {

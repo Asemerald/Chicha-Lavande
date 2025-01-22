@@ -28,9 +28,7 @@ namespace Network
         {
             //TODO faire un manager qui va gérer les services
             
-            await UnityServices.InitializeAsync();
-            await VivoxService.Instance.InitializeAsync();
-            VivoxManager.Instance.LoginToVivoxAsync();
+            
         }
 
         public async Task<string> CreateRelayAsync()
