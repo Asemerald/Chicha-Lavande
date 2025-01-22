@@ -6,8 +6,12 @@ using UnityEngine;
 public class ObjectsWaveInstantier : MonoBehaviour
 {
     [SerializeField] private bool continius;
+    [SerializeField] private bool isSync;
+    [SerializeField] private SyncCooldown syncCooldown;
+    
     [SerializeField] private AudioSource source;
     [SerializeField] private float lerpLoudnessSpeed = 300f;
+    
     
     private AudioLoudnessDetection detector;
     private float loudness;
@@ -34,8 +38,9 @@ public class ObjectsWaveInstantier : MonoBehaviour
         if (continius)
             detector.MicrophoneToAudioClip();
         
-        //canWave = true;
         canWave = true;
+        
+        //canWave = true;
         currentLoudness = 0;
         loadingLoudTimer = 0;
     }
@@ -43,6 +48,11 @@ public class ObjectsWaveInstantier : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isSync)
+        {
+            canWave = syncCooldown.canWave;
+        }
+        
         if (continius)
         {
             loudnessValue = detector.GetLoudnessFromMicrophone() *  loudnessSensibility;
@@ -57,14 +67,31 @@ public class ObjectsWaveInstantier : MonoBehaviour
         if (loudness < threshold)
             loudness = 0;
 
-        if (canWave)
+        if (canWave && loudness > 0)
+        {
+            WaveInstantier.instance.InstantiateWave(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100), transform.position, transform.gameObject);
+
+            if (isSync)
+            {
+                syncCooldown.Cooldown();
+            }
+            else
+            {
+                StartCoroutine(WaveCD());
+            }
+            
+        }
+
+
+        
+
+        /*if (canWave)
         {
             if (((loudness < currentLoudness - 40 || loudness < threshold + 2) && loudness > 0) || loudness == 100)
             {
                 Debug.Log("Instanciate");
                 //canWave = false;
                 WaveInstantier.instance.InstantiateWave(Mathf.RoundToInt(loudnessCurve.Evaluate(currentLoudness) * 100), transform.position, transform.gameObject);
-                canWave = false;
                 currentLoudness = 0;
                 loadingLoudTimer = 0;
                 
@@ -76,13 +103,18 @@ public class ObjectsWaveInstantier : MonoBehaviour
                 currentLoudness = loudness;
                 loadingLoudTimer += Time.deltaTime;
             }
+        }*/
+
+        if (uiText != null)
+        {
+            uiText.text = loudness.ToString();
         }
         
-        uiText.text = loudness.ToString();
     }
     
     private IEnumerator WaveCD()
     {
+        canWave = false;
         yield return new WaitForSeconds(0.3f);
         canWave = true;
     }
