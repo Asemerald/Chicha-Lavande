@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using Wave;
 
 public class WaveBehaviour : NetworkBehaviour
 {
@@ -12,7 +13,7 @@ public class WaveBehaviour : NetworkBehaviour
     private float currentScale;
 
     [SerializeField] private ParticleSystem ps;
-    [SerializeField] private GameObject previewShape;
+    [SerializeField] private PreviewShape previewShape;
 
     private void Start()
     {
@@ -44,7 +45,8 @@ public class WaveBehaviour : NetworkBehaviour
     {
         if (other.gameObject.CompareTag("Player") && other.GetComponent<NetworkObject>().OwnerClientId != parentId)
         {
-            GameObject instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
+            PreviewShape instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
+            instanceShape.instantierId = parentId;
             Destroy(instanceShape, 3f);
         }
     }

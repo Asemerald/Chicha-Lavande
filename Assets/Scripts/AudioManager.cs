@@ -26,16 +26,15 @@ public class AudioManager : MonoBehaviour
     
     [SerializeField] private AudioClip[] miscSounds;
 
-    private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1, GameObject parent = null)
+    private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1, ulong parentID = 99)
     {
         GameObject gameObject = Instantiate(audioPrefab);
         gameObject.transform.position = position;
 
         ObjectsWaveInstantier waveInstantier = gameObject.GetComponent<ObjectsWaveInstantier>();
-        if (parent != null)
-        {
-            waveInstantier.parentWaveID = parent.GetComponent<NetworkObject>().OwnerClientId;
-        }
+        
+        waveInstantier.parentWaveID = parentID;
+        
         
         AudioSource audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.clip = clip;
@@ -45,14 +44,14 @@ public class AudioManager : MonoBehaviour
         Object.Destroy((Object) gameObject, clip.length * ((double) Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale));
     }
 
-    public void PlayFootstep(Vector3 position, GameObject parent)
+    public void PlayFootstep(Vector3 position, ulong parentID)
     {
         AudioClip randomClip = footsteps[Random.Range(0, footsteps.Length - 1)];
-        PlayClipAtPoint(randomClip, position, 1, parent);
+        PlayClipAtPoint(randomClip, position, 1, parentID);
     }
     
     
-    public void PlayBulletShot(int bulletRemainsIndex, Vector3 position, GameObject parent)
+    public void PlayBulletShot(int bulletRemainsIndex, Vector3 position, ulong parentID)
     {
         AudioClip thisBullet;
         if (bulletRemainsIndex == 0)
@@ -64,18 +63,18 @@ public class AudioManager : MonoBehaviour
             thisBullet = fireBullets[Random.Range(0, fireBullets.Length - 1)];
         }
         
-        PlayClipAtPoint(thisBullet, position, 1, parent);
+        PlayClipAtPoint(thisBullet, position, 0.5f, parentID);
     }
     
-    public void PlayImpactShot(Vector3 position, GameObject parent)
+    public void PlayImpactShot(Vector3 position, ulong parentID)
     {
         AudioClip impact = impactSounds[Random.Range(0, impactSounds.Length - 1)];
         
-        PlayClipAtPoint(impact, position, 1, parent);
+        PlayClipAtPoint(impact, position, 1, parentID);
     }
 
-    public void PlayMiscSound(int clipIndex, Vector3 position, GameObject parent)
+    public void PlayMiscSound(int clipIndex, Vector3 position, ulong parentID)
     {
-        PlayClipAtPoint(miscSounds[clipIndex], position, 1, parent);
+        PlayClipAtPoint(miscSounds[clipIndex], position, 1, parentID);
     }
 }

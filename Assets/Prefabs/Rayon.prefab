@@ -155,7 +155,7 @@ MonoBehaviour:
   waveDistMultiplier: 5
   waveSpeedMultiplier: 5
   ps: {fileID: 4396468957272323695}
-  previewShape: {fileID: 3064539569185631299, guid: f0cf0e3b737128a44b85741f38813c36, type: 3}
+  previewShape: {fileID: 2580818899364613946, guid: f0cf0e3b737128a44b85741f38813c36, type: 3}
 --- !u!54 &405850045203036178
 Rigidbody:
   m_ObjectHideFlags: 0

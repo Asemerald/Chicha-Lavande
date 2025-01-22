@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
@@ -14,7 +15,19 @@ namespace Player
 
         private void Footstep()
         {
-            AudioManager.instance.PlayFootstep(feet.position, gameObject);
+            PlayFootstepServerRpc();
+        }
+        
+        [ServerRpc]
+        private void PlayFootstepServerRpc()
+        {
+            PlayFootstepClientRpc();
+        }
+        
+        [ClientRpc]
+        private void PlayFootstepClientRpc()
+        {
+            AudioManager.instance.PlayFootstep(transform.position, networkObject.OwnerClientId);
         }
     }
 }

@@ -69,10 +69,10 @@ namespace Network
                 await VivoxService.Instance.LeaveAllChannelsAsync();
                 
                 await VivoxService.Instance.JoinPositionalChannelAsync(channelName, ChatCapability.AudioOnly, new Channel3DProperties(
-                    audibleDistance: 11,
+                    audibleDistance: 32,
                     conversationalDistance: 1,
                     audioFadeModel: AudioFadeModel.InverseByDistance,
-                    audioFadeIntensityByDistanceaudio: 3
+                    audioFadeIntensityByDistanceaudio: 1
                     ));
                 
                 Debug.Log($"Joined channel: {channelName}");

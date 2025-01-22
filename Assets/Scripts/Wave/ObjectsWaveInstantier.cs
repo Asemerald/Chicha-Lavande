@@ -35,8 +35,23 @@ public class ObjectsWaveInstantier : NetworkBehaviour
     public AnimationCurve loudnessCurve;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+    public override void OnNetworkSpawn()
     {
+        var playerController = TryGetComponent<PlayerController>(out var component);
+        if (IsOwner || !playerController)
+        {
+            return;
+        }
+        
+        // Disable input processing for non-owners but keep the script for synchronization.
+        enabled = false;
+        
+    }
+    
+    
+    void Start()
+    { 
         
         detector = GetComponent<AudioLoudnessDetection>();
         

@@ -139,7 +139,7 @@ namespace Player
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 if (rb is null) Debug.Log("rb is null");
                 
-                AudioManager.instance.PlayMiscSound(1, feet.position, gameObject);
+                AudioManager.instance.PlayMiscSound(1, feet.position, networkObject.OwnerClientId);
                 
                 currentFallTime = coyoteTime + 1;
             }
@@ -150,7 +150,7 @@ namespace Player
             if (!isLanding)
             {
                 isLanding = true;
-                AudioManager.instance.PlayMiscSound(0, feet.position, gameObject);
+                AudioManager.instance.PlayMiscSound(0, feet.position, networkObject.OwnerClientId);
                 yield return new WaitForSeconds(0.3f);
                 isLanding = false;
             }

@@ -42,6 +42,7 @@ namespace Player
                     {
                         // Call server to process the shot
                         ShootPlayerServerRpc(networkObject.NetworkObjectId);
+                        Debug.Log("Shot at player");
                     }
                     else 
                     {
