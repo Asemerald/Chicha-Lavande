@@ -76,6 +76,7 @@ namespace Player
         void Update()
         {
             HandleMovementUpdate();
+            HandleShooting();
             UpdateServerWithPredictionServerRpc(lastProcessedPosition, lastProcessedRotation);
         }
 
