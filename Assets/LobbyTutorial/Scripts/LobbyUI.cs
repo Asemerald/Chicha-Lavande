@@ -112,7 +112,7 @@ public class LobbyUI : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    private void Show() {
+    public void Show() {
         gameObject.SetActive(true);
     }
 

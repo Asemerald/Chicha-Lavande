@@ -92,7 +92,6 @@ namespace Player
             if (IsLocalPlayer)
             {
                 GameManager.Instance.ReferenceCamera(virtualCamera.gameObject);
-                
             }
         }
 
