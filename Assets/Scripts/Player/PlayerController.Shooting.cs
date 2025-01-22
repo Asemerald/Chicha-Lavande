@@ -52,6 +52,9 @@ namespace Player
                     Debug.Log("You got shot!");
                 }
                 Debug.Log($"Player {targetPlayer.OwnerClientId} got shot!");
+                
+                //Audio
+                AudioManager.instance.PlayBulletShot(1, transform.position, gameObject);
             }
         }
         

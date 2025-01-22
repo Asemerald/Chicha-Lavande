@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5645891218613050884
+--- !u!114 &-8233941098396505921
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,27 +20,30 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutlineMAT
-  m_Shader: {fileID: -6465566751694194690, guid: f8fe19f3b6c468848b6674f793c51ba8, type: 3}
+  m_Name: CrosshairMAT
+  m_Shader: {fileID: -6465566751694194690, guid: c171678e94d45294bbbd261636562fe7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
+  m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
-  - MOTIONVECTORS
   - DepthOnly
-  - SHADOWCASTER
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -58,20 +61,11 @@ Material:
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
-    - _CastShadows: 0
-    - _Color_Threshold: 0.1
-    - _Cull: 1
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
-    - _DrawOrder: 0
+    - _CastShadows: 1
+    - _Cull: 2
     - _DstBlend: 10
-    - _MaxDist: 5
-    - _Normal_Threshold: 0.5
-    - _OVERLAY: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Size: 0.01
     - _SrcBlend: 5
     - _Surface: 1
     - _ZTest: 4
@@ -79,7 +73,6 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Outline_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _PlayerPos: {r: -2.6915767, g: -0.86482954, b: 4.5178537, a: 0}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

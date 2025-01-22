@@ -20,14 +20,22 @@ public class AudioManager : MonoBehaviour
     
     [SerializeField] private AudioClip[] fireBullets;
     [SerializeField] private AudioClip[] emptyShots;
+    [SerializeField] private AudioClip[] impactSounds;
     [SerializeField] private AudioClip reload;
     
     [SerializeField] private AudioClip[] miscSounds;
 
-    private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume)
+    private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1, GameObject parent = null)
     {
-        GameObject gameObject = audioPrefab;
+        GameObject gameObject = Instantiate(audioPrefab);
         gameObject.transform.position = position;
+
+        ObjectsWaveInstantier waveInstantier = gameObject.GetComponent<ObjectsWaveInstantier>();
+        if (parent != null)
+        {
+            waveInstantier.parentWave = parent;
+        }
+        
         AudioSource audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.clip = clip;
         audioSource.spatialBlend = 1f;
@@ -36,30 +44,37 @@ public class AudioManager : MonoBehaviour
         Object.Destroy((Object) gameObject, clip.length * ((double) Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale));
     }
 
-    public void PlayFootstep(Vector3 position)
+    public void PlayFootstep(Vector3 position, GameObject parent)
     {
-        AudioClip randomClip = footsteps[Random.Range(0, footsteps.Length)];
-        PlayClipAtPoint(randomClip, position, 1);
+        AudioClip randomClip = footsteps[Random.Range(0, footsteps.Length - 1)];
+        PlayClipAtPoint(randomClip, position, 1, parent);
     }
     
     
-    public void PlayBulletShot(int bulletRemainsIndex, Vector3 position)
+    public void PlayBulletShot(int bulletRemainsIndex, Vector3 position, GameObject parent)
     {
         AudioClip thisBullet;
         if (bulletRemainsIndex == 0)
         {
-            thisBullet = emptyShots[Random.Range(0, 1)];
+            thisBullet = emptyShots[Random.Range(0, emptyShots.Length - 1)];
         }
         else
         {
-            thisBullet = fireBullets[Random.Range(0, fireBullets.Length)];
+            thisBullet = fireBullets[Random.Range(0, fireBullets.Length - 1)];
         }
         
-        PlayClipAtPoint(thisBullet, position, 1);
+        PlayClipAtPoint(thisBullet, position, 1, parent);
+    }
+    
+    public void PlayImpactShot(Vector3 position, GameObject parent)
+    {
+        AudioClip impact = impactSounds[Random.Range(0, impactSounds.Length - 1)];
+        
+        PlayClipAtPoint(impact, position, 1, parent);
     }
 
-    public void PlayMiscSound(int clipIndex, Vector3 position, float volume)
+    public void PlayMiscSound(int clipIndex, Vector3 position, GameObject parent)
     {
-        PlayClipAtPoint(miscSounds[clipIndex], position, volume);
+        PlayClipAtPoint(miscSounds[clipIndex], position, 1, parent);
     }
 }
