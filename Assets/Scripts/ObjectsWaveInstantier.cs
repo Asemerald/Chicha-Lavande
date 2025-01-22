@@ -11,7 +11,8 @@ public class ObjectsWaveInstantier : MonoBehaviour
     
     [SerializeField] private AudioSource source;
     [SerializeField] private float lerpLoudnessSpeed = 300f;
-    
+
+    public GameObject parentWave;
     
     private AudioLoudnessDetection detector;
     private float loudness;
@@ -69,7 +70,8 @@ public class ObjectsWaveInstantier : MonoBehaviour
 
         if (canWave && loudness > 0)
         {
-            WaveInstantier.instance.InstantiateWave(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100), transform.position, transform.gameObject);
+            WaveInstantier.instance.InstantiateWave(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100),
+                transform.position, parentWave == null ?  transform.gameObject : parentWave);
 
             if (isSync)
             {

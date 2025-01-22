@@ -138,9 +138,9 @@ namespace Player
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);*/
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 if (rb is null) Debug.Log("rb is null");
-
-                //AudioContainer.Instance.PlaySound(audioSource, AudioContainer.Instance.jump);
-
+                
+                AudioManager.instance.PlayMiscSound(1, feet.position, gameObject);
+                
                 currentFallTime = coyoteTime + 1;
             }
         }
@@ -150,7 +150,7 @@ namespace Player
             if (!isLanding)
             {
                 isLanding = true;
-                //AudioContainer.Instance.PlaySound(audioSource, AudioContainer.Instance.land);
+                AudioManager.instance.PlayMiscSound(0, feet.position, gameObject);
                 yield return new WaitForSeconds(0.3f);
                 isLanding = false;
             }
