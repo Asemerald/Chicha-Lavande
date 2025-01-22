@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlayerOutline : MonoBehaviour
 {
-    [SerializeField] private MeshRenderer outlineMesh;
+    [SerializeField] private Material outlineMAT;
 
     // Update is called once per frame
     void Update()
     {
-        outlineMesh.material.SetVector("PlayerPos", transform.position);
+        outlineMAT.SetVector("_PlayerPos", transform.parent.position);
     }
 }
