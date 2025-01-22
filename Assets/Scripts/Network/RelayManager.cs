@@ -7,6 +7,7 @@ using Unity.Networking.Transport.Relay;
 using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using Unity.Services.Vivox;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,7 +26,11 @@ namespace Network
 
         private async void Start()
         {
+            //TODO faire un manager qui va gérer les services
+            
             await UnityServices.InitializeAsync();
+            await VivoxService.Instance.InitializeAsync();
+            VivoxManager.Instance.LoginToVivoxAsync();
         }
 
         public async Task<string> CreateRelayAsync()
@@ -66,6 +71,7 @@ namespace Network
                     isSecure));
                 
                 NetworkManager.Singleton.StartHost();
+                VivoxManager.Instance.JoinChannelAsync(joinCode);
                 
                 return joinCode;
             }
@@ -105,6 +111,7 @@ namespace Network
             
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(host, port, joinAllocationId, connectionData, hostConnectionData, key, isSecure));
                 NetworkManager.Singleton.StartClient();
+                VivoxManager.Instance.JoinChannelAsync(joinCode);
             }
             catch (Exception e)
             {

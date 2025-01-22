@@ -19,6 +19,7 @@ public class LobbyManager : MonoBehaviour {
     public const string KEY_PLAYER_NAME = "PlayerName";
     public const string KEY_PLAYER_CHARACTER = "Character";
     public const string KEY_GAME_MODE = "GameMode";
+    
 
 
 
@@ -56,7 +57,7 @@ public class LobbyManager : MonoBehaviour {
     private float lobbyPollTimer;
     private float refreshLobbyListTimer = 5f;
     private Lobby joinedLobby;
-    private string playerName;
+    public string playerName;
 
 
     private void Awake() {

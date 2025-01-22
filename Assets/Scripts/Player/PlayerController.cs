@@ -86,6 +86,12 @@ namespace Player
             playerMeshRenderer = GetComponent<MeshRenderer>();
             
             health = 100;
+            
+            if (IsLocalPlayer)
+            {
+                GameManager.Instance.ReferenceCamera(virtualCamera.gameObject);
+                
+            }
         }
 
         void Update()

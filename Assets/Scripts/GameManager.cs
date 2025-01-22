@@ -8,11 +8,13 @@ public class GameManager : NetworkBehaviour
     #region Fields
     
     [SerializeField] public Transform[] spawnPoints;
+    [SerializeField] public GameObject playerGameObject;
     
     #endregion
     
     #region Variables
     public static GameManager Instance { get; private set; }
+    public event EventHandler OnPlayerSpawned; // TODO faire un truc avec jsp
     
     #endregion
     
@@ -28,9 +30,18 @@ public class GameManager : NetworkBehaviour
             return;
         }
         Instance = this;
+        
     }
 
     #endregion
+    
+    public void ReferenceCamera(GameObject Camera)
+    {
+        playerGameObject = Camera;
+    }
+    
+        
+    
     
     #endregion
 }
