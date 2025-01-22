@@ -16841,12 +16841,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6e22c78766a5b4c8424c3eb2377c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   continius: 1
   isSync: 0
   syncCooldown: {fileID: 0}
   source: {fileID: 1429615363}
   lerpLoudnessSpeed: 300
-  parentWave: {fileID: 0}
+  parentWaveID: 0
   loudnessSensibility: 400
   threshold: 2
   uiText: {fileID: 1992354918}
@@ -17306,6 +17307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b0b6c34b263956478275759c86fa0ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   outlineMAT: {fileID: 0}
 --- !u!1 &1523958481
 GameObject:
@@ -23301,12 +23303,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6e22c78766a5b4c8424c3eb2377c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   continius: 1
   isSync: 0
   syncCooldown: {fileID: 0}
   source: {fileID: 2006538130}
   lerpLoudnessSpeed: 300
-  parentWave: {fileID: 0}
+  parentWaveID: 0
   loudnessSensibility: 400
   threshold: 2
   uiText: {fileID: 1069237185}
@@ -23894,6 +23897,7 @@ GameObject:
   - component: {fileID: 2111140366}
   - component: {fileID: 2111140365}
   - component: {fileID: 2111140367}
+  - component: {fileID: 2111140369}
   - component: {fileID: 2111140368}
   m_Layer: 0
   m_Name: WaveInstantier
@@ -24039,7 +24043,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d726d0b28f3a9964993f6531fdb84665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wave: {fileID: 3082972441196255078, guid: 3184500abf23dc14ea6aea734c0400ae, type: 3}
+  ShowTopMostFoldoutHeaderGroup: 1
+  wave: {fileID: -6666941541208797076, guid: 3184500abf23dc14ea6aea734c0400ae, type: 3}
+--- !u!114 &2111140369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111140364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1844779350
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &2139720599
 GameObject:
   m_ObjectHideFlags: 0

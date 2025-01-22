@@ -97,7 +97,6 @@ namespace Network
         {
             if (playerGameObject == null) return;
             VivoxService.Instance.Set3DPosition(Camera.main.gameObject, channelName);
-            Debug.Log("Updated listener position to " + playerGameObject.transform.position);
         }
 
 

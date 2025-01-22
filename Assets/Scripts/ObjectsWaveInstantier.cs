@@ -14,7 +14,8 @@ public class ObjectsWaveInstantier : NetworkBehaviour
     [SerializeField] private AudioSource source;
     [SerializeField] private float lerpLoudnessSpeed = 300f;
 
-    public GameObject parentWave;
+    public ulong parentWaveID;
+    
     
     private AudioLoudnessDetection detector;
     private float loudness;
@@ -36,6 +37,7 @@ public class ObjectsWaveInstantier : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         detector = GetComponent<AudioLoudnessDetection>();
         
         if (continius)
@@ -51,6 +53,7 @@ public class ObjectsWaveInstantier : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (isSync)
         {
             canWave = syncCooldown.canWave;
@@ -72,8 +75,14 @@ public class ObjectsWaveInstantier : NetworkBehaviour
 
         if (canWave && loudness > 0)
         {
-            WaveInstantier.instance.InstantiateWaveServerRpc(Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100),
-                transform.position, var component = transform.parent.TryGetComponent<PlayerController>() != null ? NetworkManager.Singleton.LocalClientId : 99);
+            ulong parentId = transform.TryGetComponent<PlayerController>(out var component) 
+                ? NetworkManager.Singleton.LocalClientId 
+                : parentWaveID;
+
+            WaveInstantier.instance.InstantiateWaveServerRpc(
+                Mathf.RoundToInt(loudnessCurve.Evaluate(loudness) * 100),
+                transform.position,
+                parentId);
 
             if (isSync)
             {

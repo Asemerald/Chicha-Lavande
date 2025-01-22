@@ -42,11 +42,8 @@ public class WaveBehaviour : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && NetworkManager.Singleton.LocalClientId != parentId)
+        if (other.gameObject.CompareTag("Player") && other.GetComponent<NetworkObject>().OwnerClientId != parentId)
         {
-            Debug.Log("Local player id is " + NetworkManager.Singleton.LocalClientId + " and parent id is " + parentId);
-            Debug.Log($"Player ({other.gameObject.name}) find at {other.transform.position}");
-            
             GameObject instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
             Destroy(instanceShape, 3f);
         }

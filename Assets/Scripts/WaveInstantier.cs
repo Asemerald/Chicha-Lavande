@@ -10,15 +10,14 @@ public class WaveInstantier : NetworkBehaviour
         instance = this;
     }
 
-    [SerializeField] private GameObject wave;
+    [SerializeField] private WaveBehaviour wave;
     
-    private GameObject InstantiateWave(int power, Vector3 position, ulong parentId)
+    private void InstantiateWave(int power, Vector3 position, ulong parentId)
     {
-        GameObject waveInstance = Instantiate(wave, position, Quaternion.identity);
+        WaveBehaviour waveInstance = Instantiate(wave, position, Quaternion.identity);
         waveInstance.transform.localScale = Vector3.zero;
-        waveInstance.GetComponent<WaveBehaviour>().audioPower = power;
-        waveInstance.GetComponent<WaveBehaviour>().parentId = parentId;
-        return waveInstance;
+        waveInstance.audioPower = power;
+        waveInstance.parentId = parentId;
     }
     
     [ServerRpc (RequireOwnership = false)]

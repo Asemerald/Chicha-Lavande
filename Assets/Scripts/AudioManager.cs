@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -33,7 +34,7 @@ public class AudioManager : MonoBehaviour
         ObjectsWaveInstantier waveInstantier = gameObject.GetComponent<ObjectsWaveInstantier>();
         if (parent != null)
         {
-            waveInstantier.parentWave = parent;
+            waveInstantier.parentWaveID = parent.GetComponent<NetworkObject>().OwnerClientId;
         }
         
         AudioSource audioSource = gameObject.GetComponent<AudioSource>();
