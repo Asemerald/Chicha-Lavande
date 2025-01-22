@@ -157,7 +157,7 @@ MonoBehaviour:
   shakeAmplitude: 6
   health: 100
   NumberOfBullets: 30
-  timeBetweenShots: 0.1
+  timeBetweenShots: 2
   audioSource: {fileID: 0}
   debugText: {fileID: 0}
   rb: {fileID: 4834590807183578813}
@@ -533,7 +533,7 @@ MonoBehaviour:
   syncCooldown: {fileID: 7468630820973407157}
   source: {fileID: 4454491094406468032}
   lerpLoudnessSpeed: 300
-  parentWave: {fileID: 2342834874821621557}
+  parentWaveID: 0
   loudnessSensibility: 400
   threshold: 2
   uiText: {fileID: 0}

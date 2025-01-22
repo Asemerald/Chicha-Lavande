@@ -66,6 +66,7 @@ namespace Player
         private bool isGrounded;
         private float lastShotTime;
         private bool isDead;
+        private NetworkObject networkObject;
         
         #endregion
     
@@ -91,7 +92,6 @@ namespace Player
             if (IsLocalPlayer)
             {
                 GameManager.Instance.ReferenceCamera(virtualCamera.gameObject);
-                
             }
         }
 

@@ -22,9 +22,13 @@ public class EditPlayerName : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-
+        //Load the player name from playerprefs if it exists
+        if (PlayerPrefs.HasKey("PlayerName")) {
+            playerName = PlayerPrefs.GetString("PlayerName");
+        }
+        
         GetComponent<Button>().onClick.AddListener(() => {
-            UI_InputWindow.Show_Static("Player Name", playerName, "abcdefghijklmnopqrstuvxywzABCDEFGHIJKLMNOPQRSTUVXYWZ .,-", 20,
+            UI_InputWindow.Show_Static("Player Name", playerName, "abcdefghijklmnopqrstuvxywzABCDEFGHIJKLMNOPQRSTUVXYWZ.,-", 20,
             () => {
                 // Cancel
             },
@@ -38,6 +42,11 @@ public class EditPlayerName : MonoBehaviour {
         });
 
         playerNameText.text = playerName;
+        //add it to playerprefs
+        if (PlayerPrefs.HasKey("PlayerName")) {
+            playerName = PlayerPrefs.GetString("PlayerName");
+            playerNameText.text = playerName;
+        }
     }
 
     private void Start() {
