@@ -762,8 +762,12 @@ MonoBehaviour:
   dynamicFOVMultiplier: 3
   shakeTime: 0.55
   shakeAmplitude: 6
+  hp: 100
+  NumberOfBullets: 30
+  timeBetweenShots: 0.1
   audioSource: {fileID: 0}
   debugText: {fileID: 0}
+  rb: {fileID: 4796225268145670030}
 --- !u!136 &8372884408827030329
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -894,7 +898,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4764239010834268599}
         m_TargetAssemblyTypeName: Player.PlayerController, Assembly-CSharp
-        m_MethodName: OnMove
+        m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -948,8 +952,8 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BumperGun, Assembly-CSharp
+      - m_Target: {fileID: 4764239010834268599}
+        m_TargetAssemblyTypeName: Player.PlayerController, Assembly-CSharp
         m_MethodName: OnFire
         m_Mode: 0
         m_Arguments:

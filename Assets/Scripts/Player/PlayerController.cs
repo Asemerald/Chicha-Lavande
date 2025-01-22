@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Player
 {
-    public partial class PlayerController
+    public partial class PlayerController : NetworkBehaviour
     {
         
         #region Fields
@@ -34,12 +34,22 @@ namespace Player
         [SerializeField] private float shakeTime = 0.3f;
         [SerializeField] private float shakeAmplitude;
         
+        [Header("Shooting")]
+        [SerializeField] private int health = 100;
+        [SerializeField] private int NumberOfBullets = 30;
+        [SerializeField] private float timeBetweenShots = 0.1f;
+        
         [Header("Audio")] 
         [SerializeField] private AudioSource audioSource;
         private bool isLanding;
     
         [Header("Debug")]
         [SerializeField] private TextMeshProUGUI debugText;
+        [SerializeField] private Rigidbody rb;
+        [SerializeField] private Collider playerCollider; // Reference to the player's collider
+        [SerializeField] private MeshRenderer playerMeshRenderer; // Reference to the player's mesh renderer
+        
+        
         
         #endregion
         
@@ -54,7 +64,8 @@ namespace Player
         private float currentAddedGravity;
         private RaycastHit slopeHit;
         private bool isGrounded;
-        private Rigidbody rb;
+        private float lastShotTime;
+        private bool isDead;
         
         #endregion
     
@@ -71,12 +82,19 @@ namespace Player
             Cursor.visible = false;
         
             rb = GetComponent<Rigidbody>();
+            playerCollider = GetComponent<Collider>();
+            playerMeshRenderer = GetComponent<MeshRenderer>();
+            
+            health = 100;
         }
 
         void Update()
         {
+            if (isDead) return;
+            
             HandleMovementUpdate();
             HandleShooting();
+            
             UpdateServerWithPredictionServerRpc(lastProcessedPosition, lastProcessedRotation);
         }
 

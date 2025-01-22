@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Player
 {
-    public partial class PlayerController : NetworkBehaviour
+    public partial class PlayerController
     {
 
         private void HandleMovementUpdate()
@@ -134,8 +134,10 @@ namespace Player
         {
             if (currentFallTime < coyoteTime)
             {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                /*Debug.Log(rb.transform.name);   
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);*/
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                if (rb is null) Debug.Log("rb is null");
 
                 //AudioContainer.Instance.PlaySound(audioSource, AudioContainer.Instance.jump);
 
@@ -162,10 +164,9 @@ namespace Player
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                
+                return false;
+                
             }
 
             return false;
