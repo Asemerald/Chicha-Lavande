@@ -48,7 +48,7 @@ namespace Player
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Collider playerCollider; // Reference to the player's collider
         [SerializeField] private MeshRenderer playerMeshRenderer; // Reference to the player's mesh renderer
-        
+        [SerializeField] private Animator playerAnimator;
         
         
         #endregion
@@ -84,6 +84,7 @@ namespace Player
             rb = GetComponent<Rigidbody>();
             playerCollider = GetComponent<Collider>();
             playerMeshRenderer = GetComponent<MeshRenderer>();
+            playerAnimator = GetComponent<Animator>();
             
             health = 100;
         }
@@ -94,6 +95,7 @@ namespace Player
             
             HandleMovementUpdate();
             HandleShooting();
+            HandleAnimation();
             
             UpdateServerWithPredictionServerRpc(lastProcessedPosition, lastProcessedRotation);
         }
