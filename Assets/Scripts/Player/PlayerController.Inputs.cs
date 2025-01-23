@@ -17,7 +17,7 @@ namespace Player
         {
             if (isDead) return;
             
-            if (context.action.WasPerformedThisFrame())
+            if (context.action.WasPressedThisFrame())
             {
                 Debug.Log("Jump");
                 Jump();
