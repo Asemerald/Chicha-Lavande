@@ -38,6 +38,8 @@ namespace Player
         [SerializeField] private int health = 100;
         [SerializeField] private int NumberOfBullets = 30;
         [SerializeField] private float timeBetweenShots = 0.1f;
+        [SerializeField] private TMP_Text deathText;
+        [SerializeField] private TMP_Text healthText;
         
         [Header("Audio")] 
         [SerializeField] private AudioSource audioSource;
@@ -103,6 +105,8 @@ namespace Player
         void Update()
         {
             if (isDead) return;
+            
+            healthText.text = $"Health: {health}";
             
             HandleMovementUpdate();
             HandleShooting();

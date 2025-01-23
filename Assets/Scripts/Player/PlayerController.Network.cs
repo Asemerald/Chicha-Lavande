@@ -13,6 +13,7 @@ namespace Player
                 // Disable input processing for non-owners but keep the script for synchronization.
                 enabled = false;
                 debugText.gameObject.SetActive(false);
+                healthText.gameObject.SetActive(false);
             }
         }
     }

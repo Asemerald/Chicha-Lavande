@@ -38,15 +38,15 @@ public class EditPlayerName : MonoBehaviour {
                 playerNameText.text = playerName;
 
                 OnNameChanged?.Invoke(this, EventArgs.Empty);
+                
+                // Update playerprefs
+                PlayerPrefs.SetString("PlayerName", playerName);
             });
         });
 
         playerNameText.text = playerName;
         //add it to playerprefs
-        if (PlayerPrefs.HasKey("PlayerName")) {
-            playerName = PlayerPrefs.GetString("PlayerName");
-            playerNameText.text = playerName;
-        }
+       
     }
 
     private void Start() {
