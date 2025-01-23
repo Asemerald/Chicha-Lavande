@@ -29,7 +29,7 @@ namespace Player
         {
             if (isDead) return;
             
-            if (context.action.WasPerformedThisFrame())
+            if (context.action.WasPressedThisFrame())
             {
                 //return if last shot was too recent
                 if (Time.deltaTime - lastShotTime < timeBetweenShots && !canShoot) return;
@@ -46,7 +46,7 @@ namespace Player
                     if (hitTransform.TryGetComponent<NetworkObject>(out var networkObject))
                     {
                         // Call server to process the shot
-                        ShootPlayerServerRpc(networkObject.NetworkObjectId);
+                        ShootPlayerServerRpc(networkObject.NetworkObjectId, NetworkManager.Singleton.LocalClientId);
                         Debug.Log("Shot at player");
                     }
                     else 

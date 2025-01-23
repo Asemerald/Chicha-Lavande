@@ -23,7 +23,7 @@ namespace Player
         }
  
         [ServerRpc (RequireOwnership = false)]
-        private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ServerRpcParams rpcParams = default)
+        private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ulong ShooterID, ServerRpcParams rpcParams = default)
         {
             if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var targetObject))
                 return;
@@ -32,17 +32,30 @@ namespace Player
             if (targetPlayer != null)
             {
                 // Notify all clients that a player was shot
-                ShootPlayerClientRpc(targetNetworkObjectId);
+                ShootPlayerClientRpc(targetNetworkObjectId, ShooterID);
 
                 // Optionally handle game logic like reducing health on the server
             }
         }
 
         [ClientRpc]
-        private void ShootPlayerClientRpc(ulong targetNetworkObjectId)
+        private void ShootPlayerClientRpc(ulong targetNetworkObjectId, ulong ShooterID)
         {
             if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var targetObject))
-                return;
+            {
+                
+                if (ShooterID != NetworkManager.Singleton.LocalClientId)
+                {
+                    Debug.Log("You got shot!");
+                    TakeDamage();
+                }
+                
+                //Audio
+                AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
+                debugText.text = $"Player shoot! " + debugCounter++;
+                return; 
+                
+            };
 
             var targetPlayer = targetObject.GetComponent<PlayerController>();
             if (targetPlayer != null)
@@ -50,6 +63,7 @@ namespace Player
                 if (targetPlayer.IsOwner)
                 {
                     Debug.Log("You got shot!");
+                    TakeDamage();
                 }
                 Debug.Log($"Player {targetPlayer.OwnerClientId} got shot!");
                 
