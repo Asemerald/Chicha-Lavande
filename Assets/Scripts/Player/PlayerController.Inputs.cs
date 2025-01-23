@@ -17,8 +17,9 @@ namespace Player
         {
             if (isDead) return;
             
-            if (context.action.WasPressedThisFrame())
+            if (context.action.WasPerformedThisFrame())
             {
+                Debug.Log("Jump");
                 Jump();
             }
         }
@@ -27,7 +28,7 @@ namespace Player
         {
             if (isDead) return;
             
-            if (context.action.WasPressedThisFrame())
+            if (context.action.WasPerformedThisFrame())
             {
                 //return if last shot was too recent
                 if (Time.time - lastShotTime < timeBetweenShots) return;
@@ -46,7 +47,7 @@ namespace Player
                     }
                     else 
                     {
-                        // TODO sounds and effects depending on the surface hit 
+                        ShootOtherServerRpc();
                     }
                 }
             }

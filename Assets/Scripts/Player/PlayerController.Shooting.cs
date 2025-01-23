@@ -57,6 +57,18 @@ namespace Player
                 AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
             }
         }
+
+        [ServerRpc (RequireOwnership = false)]
+        private void ShootOtherServerRpc()
+        {
+            ShootOtherClientRpc();
+        }
+        
+        [ClientRpc]
+        private void ShootOtherClientRpc()
+        {
+            AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
+        }
         
     }
 }
