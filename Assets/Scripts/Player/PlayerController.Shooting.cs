@@ -21,7 +21,7 @@ namespace Player
                 hitTransform = hit.transform;
             }
         }
-
+ 
         [ServerRpc (RequireOwnership = false)]
         private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ServerRpcParams rpcParams = default)
         {
@@ -55,6 +55,7 @@ namespace Player
                 
                 //Audio
                 AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
+                debugText.text = $"Player shoot! " + debugCounter++;
             }
         }
 
@@ -68,6 +69,7 @@ namespace Player
         private void ShootOtherClientRpc()
         {
             AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
+            debugText.text = $"Player shoot! " + debugCounter++;
         }
         
     }

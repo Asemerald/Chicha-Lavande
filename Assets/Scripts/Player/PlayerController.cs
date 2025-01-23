@@ -67,6 +67,8 @@ namespace Player
         private float lastShotTime;
         private bool isDead;
         private NetworkObject networkObject;
+        private int debugCounter;
+        private bool canShoot = true;
         
         #endregion
     
@@ -77,6 +79,8 @@ namespace Player
         
         void Start()
         {
+            debugCounter = 0; // TODO remove
+            
             virtualCamera.Priority = 10; // set camera priority so it's on top client side
             
             Cursor.lockState = CursorLockMode.Locked; // TODO move to GameManager
@@ -88,6 +92,7 @@ namespace Player
             playerAnimator = GetComponent<Animator>();
             
             health = 100;
+            canShoot = true;
             
             if (IsLocalPlayer)
             {
