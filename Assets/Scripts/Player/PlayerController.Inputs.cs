@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,9 +32,12 @@ namespace Player
             if (context.action.WasPerformedThisFrame())
             {
                 //return if last shot was too recent
-                if (Time.time - lastShotTime < timeBetweenShots) return;
+                if (Time.deltaTime - lastShotTime < timeBetweenShots && !canShoot) return;
+
+                lastShotTime = Time.deltaTime;
                 
-                lastShotTime = Time.time;
+                canShoot = false;
+                StartCoroutine(ShootCooldown());
                 
                 Debug.Log("Fire");
             
@@ -51,6 +55,12 @@ namespace Player
                     }
                 }
             }
+        }
+
+        private IEnumerator ShootCooldown()
+        {
+            yield return new WaitForSeconds(2);
+            canShoot = true;
         }
     }
 }
