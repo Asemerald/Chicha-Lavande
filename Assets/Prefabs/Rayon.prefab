@@ -152,8 +152,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   audioPower: 0
   parentId: 0
-  waveDistMultiplier: 5
-  waveSpeedMultiplier: 5
+  waveDistMultiplier: 4
+  waveSpeedMultiplier: 7.5
   ps: {fileID: 4396468957272323695}
   previewShape: {fileID: 2580818899364613946, guid: f0cf0e3b737128a44b85741f38813c36, type: 3}
 --- !u!54 &405850045203036178
@@ -4438,7 +4438,7 @@ ParticleSystem:
       maxColor: {r: 69.40291, g: 69.40291, b: 69.40291, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1181.4316, g: 1181.4316, b: 1181.4316, a: 1}
+        key0: {r: 191.74901, g: 191.74901, b: 191.74901, a: 1}
         key1: {r: 0.7490197, g: 0.7490197, b: 0.7490197, a: 0}
         key2: {r: 0.7490197, g: 0.7490197, b: 0.7490197, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 1}
