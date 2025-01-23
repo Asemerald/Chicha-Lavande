@@ -23,59 +23,35 @@ namespace Player
         }
  
         [ServerRpc (RequireOwnership = false)]
-        private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ulong ShooterID, ServerRpcParams rpcParams = default)
+        private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ServerRpcParams rpcParams = default)
         {
-            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId,
-                    out var targetObject))
+            if (!NetworkManager.Singleton.ConnectedClients.ContainsKey(rpcParams.Receive.SenderClientId))
             {
-                ShootPlayerClientRpc(targetNetworkObjectId, ShooterID);
                 return;
-            };
-
-            var targetPlayer = targetObject.GetComponent<PlayerController>();
-            if (targetPlayer != null)
-            {
-                // Notify all clients that a player was shot
-                ShootPlayerClientRpc(targetNetworkObjectId, ShooterID);
-
-                // Optionally handle game logic like reducing health on the server
             }
+            
+            ShootPlayerClientRpc(targetNetworkObjectId, rpcParams.Receive.SenderClientId);
+                
+            
         }
 
         [ClientRpc]
         private void ShootPlayerClientRpc(ulong targetNetworkObjectId, ulong ShooterID)
         {
-            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var targetObject))
+            if (!NetworkManager.Singleton.ConnectedClients.ContainsKey(ShooterID))
             {
-                
-                if (ShooterID == NetworkManager.Singleton.LocalClientId)
-                {
-                    Debug.Log("You got shot!");
-                    TakeDamage();
-                }
-                
-                //Audio
-                AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
-                debugText.text = $"Player shoot! " + debugCounter++;
-                return; 
-                
-            };
-
-            if (ShooterID == NetworkManager.Singleton.LocalClientId)
+                return;
+            }
+            
+            // if shot player is me, take damage
+            if (targetNetworkObjectId == NetworkManager.Singleton.LocalClientId)
             {
-                Debug.Log("You got shot!");
                 TakeDamage();
             }
-                
+            
             //Audio
             AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
             debugText.text = $"Player shoot! " + debugCounter++;
-            return; 
-                
-            //Audio
-            AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
-            debugText.text = $"Player shoot! " + debugCounter++;
-            return; 
         }
 
         [ServerRpc (RequireOwnership = false)]

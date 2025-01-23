@@ -19,14 +19,15 @@ namespace Player
         [ServerRpc(RequireOwnership = false)]
         private void DeathServerRpc(ServerRpcParams rpcParams = default)
         {
-            // Notify all clients to disable this player's visual elements
-            DeathClientRpc(networkObject.OwnerClientId);
+            // Notify all clients, including passing the dead player's ID
+            DeathClientRpc(NetworkManager.Singleton.LocalClientId, rpcParams.Receive.SenderClientId);
         }
 
+
         [ClientRpc]
-        private void DeathClientRpc(ulong deadPlayerId, ClientRpcParams clientRpcParams = default)
+        private void DeathClientRpc(ulong deadPlayerId, ulong senderClientId, ClientRpcParams rpcParams = default)
         {
-            //Find the client with the deadplayerid and disable the mesh renderer and collider
+            // Disable visuals and physics for all clients
             if (NetworkManager.Singleton.ConnectedClients.TryGetValue(deadPlayerId, out var networkClient))
             {
                 if (networkClient.PlayerObject.TryGetComponent<PlayerController>(out var playerController))
@@ -36,14 +37,14 @@ namespace Player
                     playerController.rb.isKinematic = true;
                 }
             }
-            
-            if (networkObject.OwnerClientId == deadPlayerId)
+
+            // Show the respawn UI only for the client who owns the object
+            if (NetworkManager.Singleton.LocalClientId == senderClientId)
             {
                 StartCoroutine(Respawn());
             }
-            
-            
         }
+
 
         private IEnumerator Respawn() // 
         {

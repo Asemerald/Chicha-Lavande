@@ -43,10 +43,10 @@ namespace Player
             
                 if (hitTransform != null)
                 {
-                    if (hitTransform.TryGetComponent<NetworkObject>(out var networkObject))
+                    if (hitTransform.CompareTag("Player"))
                     {
                         // Call server to process the shot
-                        ShootPlayerServerRpc(networkObject.NetworkObjectId, NetworkManager.Singleton.LocalClientId);
+                        ShootPlayerServerRpc(hitTransform.GetComponent<NetworkObject>().OwnerClientId);
                         Debug.Log("Shot at player");
                     }
                     else 
