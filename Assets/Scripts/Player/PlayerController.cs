@@ -2,8 +2,10 @@
 using Cinemachine;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 namespace Player
 {
@@ -38,6 +40,9 @@ namespace Player
         [SerializeField] private int health = 100;
         [SerializeField] private int NumberOfBullets = 30;
         [SerializeField] private float timeBetweenShots = 0.1f;
+        [SerializeField] private TMP_Text deathText;
+        [SerializeField] private LayerMask bulletLayerMask;
+        [SerializeField] private TMP_Text hpText;
         
         [Header("Audio")] 
         [SerializeField] private AudioSource audioSource;
@@ -79,6 +84,12 @@ namespace Player
         
         void Start()
         {
+            if (!IsOwner) return;
+            
+            Debug.LogWarning("OwnerID" + OwnerClientId);
+            // Spawn at a random Spawn Point
+            transform.position = GameManager.Instance.spawnPoints[Random.Range(0, GameManager.Instance.spawnPoints.Length)].position;
+            
             debugCounter = 0; // TODO remove
             
             virtualCamera.Priority = 10; // set camera priority so it's on top client side
@@ -92,6 +103,8 @@ namespace Player
             playerAnimator = GetComponent<Animator>();
             
             health = 100;
+            hpText.text = health.ToString();
+            
             canShoot = true;
             
             if (IsLocalPlayer)
@@ -102,6 +115,7 @@ namespace Player
 
         void Update()
         {
+            if (!IsOwner) return;
             if (isDead) return;
             
             HandleMovementUpdate();
@@ -113,6 +127,7 @@ namespace Player
 
         void FixedUpdate()
         {
+            if (!IsOwner) return;
             HandleMovementFixedUpdate();
         }
 

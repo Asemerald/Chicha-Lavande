@@ -50,8 +50,11 @@ public class ObjectsWaveInstantier : NetworkBehaviour
     }
     
     
+    
+    
     void Start()
     { 
+        SpawnObjectServerRpc();
         
         detector = GetComponent<AudioLoudnessDetection>();
         
@@ -63,6 +66,13 @@ public class ObjectsWaveInstantier : NetworkBehaviour
         //canWave = true;
         currentLoudness = 0;
         loadingLoudTimer = 0;
+    }
+    
+    [ServerRpc (RequireOwnership = false)]
+    private void SpawnObjectServerRpc()
+    {
+        var networkObject = GetComponent<NetworkObject>();
+        networkObject.Spawn();
     }
 
     // Update is called once per frame

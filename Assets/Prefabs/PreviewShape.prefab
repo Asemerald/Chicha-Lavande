@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 570593669098177394}
   - component: {fileID: 3023561063144474036}
   - component: {fileID: 2580818899364613946}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PreviewShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4908,7 +4908,7 @@ MonoBehaviour:
   GlobalObjectIdHash: 1286287622
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
-  Ownership: 1
+  Ownership: 8
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -4930,4 +4930,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdba1f472adc4f54a144e4fcaafece6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instantierId: 0
+  ShowTopMostFoldoutHeaderGroup: 1

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using Wave;
@@ -24,6 +25,18 @@ public class WaveBehaviour : NetworkBehaviour
         currentScale = 0;
     }
 
+    public override void OnNetworkSpawn()
+    {
+
+    }
+
+    [ServerRpc (RequireOwnership = false)]
+    private void SpawnObjectServerRpc()
+    {
+        var networkObject = GetComponent<NetworkObject>();
+        networkObject.Spawn();
+    }
+
     private void Update()
     { 
         if (audioPower == null)
@@ -43,11 +56,25 @@ public class WaveBehaviour : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.GetComponent<NetworkObject>().OwnerClientId != parentId)
+        if (other.gameObject.CompareTag("Player") && other.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId)
         {
             PreviewShape instanceShape = Instantiate(previewShape, other.transform.position, other.transform.rotation);
-            instanceShape.instantierId = parentId;
-            Destroy(instanceShape, 3f);
+            var networkObject = GetComponent<NetworkObject>();
+            Destroy(gameObject, 3f);
+            //StartCoroutine(Despawn());
         }
+    }
+
+    private IEnumerator Despawn()
+    {
+        yield return new WaitForSeconds(3);
+        DespawnServerRpc();
+    }
+    
+    [ServerRpc (RequireOwnership = false)]
+    private void DespawnServerRpc()
+    {
+        var networkObject = GetComponent<NetworkObject>();
+        networkObject.Despawn(true);
     }
 }

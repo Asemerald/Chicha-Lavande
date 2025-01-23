@@ -25,38 +25,22 @@ namespace Player
         [ServerRpc (RequireOwnership = false)]
         private void ShootPlayerServerRpc(ulong targetNetworkObjectId, ServerRpcParams rpcParams = default)
         {
-            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var targetObject))
-                return;
-
-            var targetPlayer = targetObject.GetComponent<PlayerController>();
-            if (targetPlayer != null)
-            {
-                // Notify all clients that a player was shot
-                ShootPlayerClientRpc(targetNetworkObjectId);
-
-                // Optionally handle game logic like reducing health on the server
-            }
+            ShootPlayerClientRpc(targetNetworkObjectId);
         }
 
         [ClientRpc]
         private void ShootPlayerClientRpc(ulong targetNetworkObjectId)
         {
-            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var targetObject))
-                return;
-
-            var targetPlayer = targetObject.GetComponent<PlayerController>();
-            if (targetPlayer != null)
+            if (networkObject.OwnerClientId == targetNetworkObjectId)
             {
-                if (targetPlayer.IsOwner)
-                {
-                    Debug.Log("You got shot!");
-                }
-                Debug.Log($"Player {targetPlayer.OwnerClientId} got shot!");
-                
-                //Audio
-                AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
-                debugText.text = $"Player shoot! " + debugCounter++;
+                Debug.Log("You got shot!");
+                TakeDamage();
             }
+            
+            //Audio
+            AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
+            debugText.text = $"Player shoot! " + debugCounter++;
+        
         }
 
         [ServerRpc (RequireOwnership = false)]
@@ -69,7 +53,7 @@ namespace Player
         private void ShootOtherClientRpc()
         {
             AudioManager.instance.PlayBulletShot(1, transform.position, networkObject.OwnerClientId);
-            debugText.text = $"Player shoot! " + debugCounter++;
+            debugText.text = $"Other shoot! " + debugCounter++;
         }
         
     }

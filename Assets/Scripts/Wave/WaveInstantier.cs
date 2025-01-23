@@ -27,8 +27,9 @@ public class WaveInstantier : NetworkBehaviour
     }
     
     [ClientRpc]
-    private void InstantiateWaveClientRpc(int power, Vector3 position, ulong parentId)
+    public void InstantiateWaveClientRpc(int power, Vector3 position, ulong parentId)
     {
         InstantiateWave(power, position, parentId);
     }
+    
 }

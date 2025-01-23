@@ -28,8 +28,9 @@ namespace Player
         public void OnFire(InputAction.CallbackContext context)
         {
             if (isDead) return;
+            if (!IsOwner) return;
             
-            if (context.action.WasPerformedThisFrame())
+            if (context.action.WasPressedThisFrame())
             {
                 //return if last shot was too recent
                 if (Time.deltaTime - lastShotTime < timeBetweenShots && !canShoot) return;
@@ -43,11 +44,11 @@ namespace Player
             
                 if (hitTransform != null)
                 {
-                    if (hitTransform.TryGetComponent<NetworkObject>(out var networkObject))
+                    Debug.Log("Hit transform is " + hitTransform.name);
+                    if (hitTransform.TryGetComponent<PlayerController>(out var playerController))
                     {
                         // Call server to process the shot
-                        ShootPlayerServerRpc(networkObject.NetworkObjectId);
-                        Debug.Log("Shot at player");
+                        ShootPlayerServerRpc(playerController.networkObject.OwnerClientId);
                     }
                     else 
                     {
