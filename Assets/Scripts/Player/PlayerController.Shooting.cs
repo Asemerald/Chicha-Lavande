@@ -46,7 +46,7 @@ namespace Player
             // if shot player is me, take damage
             if (targetNetworkObjectId == NetworkManager.Singleton.LocalClientId)
             {
-                TakeDamage();
+                TakeDamage(1000);
             }
             
             //Audio

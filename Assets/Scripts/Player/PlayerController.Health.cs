@@ -20,30 +20,41 @@ namespace Player
         private void DeathServerRpc(ServerRpcParams rpcParams = default)
         {
             // Notify all clients, including passing the dead player's ID
-            DeathClientRpc(NetworkManager.Singleton.LocalClientId, rpcParams.Receive.SenderClientId);
+            DeathClientRpc(rpcParams.Receive.SenderClientId);
         }
 
 
         [ClientRpc]
-        private void DeathClientRpc(ulong deadPlayerId, ulong senderClientId, ClientRpcParams rpcParams = default)
+        private void DeathClientRpc(ulong senderClientId, ClientRpcParams rpcParams = default)
         {
-            // Disable visuals and physics for all clients
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(deadPlayerId, out var networkClient))
-            {
-                if (networkClient.PlayerObject.TryGetComponent<PlayerController>(out var playerController))
-                {
-                    playerController.playerMeshRenderer.enabled = false;
-                    playerController.playerCollider.enabled = false;
-                    playerController.rb.isKinematic = true;
-                }
-            }
-
-            // Show the respawn UI only for the client who owns the object
+            // Show the respawn UI only for the client who owns the object and set their NetworkVariable to true
             if (NetworkManager.Singleton.LocalClientId == senderClientId)
             {
                 StartCoroutine(Respawn());
+
+                // Ensure PlayerObject is not null
+                var playerObject = NetworkManager.Singleton.LocalClient.PlayerObject;
+                if (playerObject == null)
+                {
+                    Debug.LogError("PlayerObject is null for the local client.");
+                    return;
+                }
+
+                // Get the PlayerController component
+                var playerController = playerObject.GetComponent<PlayerController>();
+                if (playerController == null)
+                {
+                    Debug.LogError("PlayerController component not found on the PlayerObject.");
+                    return;
+                }
+
+                // Update the NetworkVariable rbKinematic
+                playerController.rbKinematic.Value = true; // Update the NetworkVariable
+                playerController.meshRendererEnabled.Value = false;
+                playerController.colliderEnabled.Value = false;
             }
         }
+
 
 
         private IEnumerator Respawn() // 
@@ -68,9 +79,9 @@ namespace Player
         }
         
         [ServerRpc(RequireOwnership = false)]
-        void RespawnClientServerRpc()
+        void RespawnClientServerRpc(ServerRpcParams rpcParams = default)
         {
-            RespawnClientRpc(networkObject.OwnerClientId);
+            RespawnClientRpc(rpcParams.Receive.SenderClientId);
         }
 
         [ClientRpc]

@@ -71,6 +71,9 @@ namespace Player
         private NetworkObject networkObject;
         private int debugCounter;
         private bool canShoot = true;
+        private NetworkVariable<bool> meshRendererEnabled = new (true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private NetworkVariable<bool> colliderEnabled = new (true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private NetworkVariable<bool> rbKinematic = new (false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         #endregion
     
@@ -81,6 +84,9 @@ namespace Player
         
         void Start()
         {
+            
+            if (!IsOwner) return;
+            
             debugCounter = 0; // TODO remove
             
             virtualCamera.Priority = 10; // set camera priority so it's on top client side
@@ -105,6 +111,11 @@ namespace Player
         void Update()
         {
             if (isDead) return;
+            rb.isKinematic = rbKinematic.Value;
+            playerMeshRenderer.enabled = meshRendererEnabled.Value;
+            playerCollider.enabled = colliderEnabled.Value;
+            
+            if(!IsOwner) return;
             
             healthText.text = $"Health: {health}";
             
@@ -112,7 +123,7 @@ namespace Player
             HandleShooting();
             HandleAnimation();
             
-            UpdateServerWithPredictionServerRpc(lastProcessedPosition, lastProcessedRotation);
+            //UpdateServerWithPredictionServerRpc(lastProcessedPosition, lastProcessedRotation);
         }
 
         void FixedUpdate()
